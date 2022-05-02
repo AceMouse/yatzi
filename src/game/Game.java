@@ -1,3 +1,5 @@
+package game;
+
 import Rules.*;
 
 import java.util.Random;
@@ -30,7 +32,7 @@ public class Game {
                 if ("d".equals(nextLine))
                     break;
                 for (var die : nextLine.split("")){
-                    if ('1'<= die.charAt(0) && die.charAt(0)<='6')
+                    if (die.length() > 0 && '1'<= die.charAt(0) && die.charAt(0)<='6')
                         keep[Integer.parseUnsignedInt(die)-1] = true;
                 }
                 roll(dice, keep);
