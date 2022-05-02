@@ -1,5 +1,8 @@
 package game;
 
+import Players.GreedyPLayer;
+import Players.Human;
+import Players.Player;
 import Rules.*;
 
 import java.util.Random;
@@ -10,49 +13,40 @@ public class Game {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("how many players?");
-        int players = sc.nextInt();
+        int playersTotal = sc.nextInt();
         System.out.println("how many human players?");
         int humans = sc.nextInt();
         sc.nextLine();
         Rule[] rules = new Rule[]{new Ones(), new Twos(), new Threes(), new Fours(), new Fives(), new Sixes(),
                 new OnePair(), new TwoPair(), new ThreePair(), new ThreeOfAKind(), new FourOfAKind(), new FiveOfAKind(), new TwoXThreeOfAKind(),
                 new SmallStraight(), new LargeStraight(), new Royal(), new FullHouse(), new Chance(), new Yatzy() };
-        int[][] board = new int[rules.length][players];
+        int[][] board = new int[rules.length][playersTotal];
         boolean[][] used = new boolean[board.length][board[0].length];
         byte[] dice = new byte[6];
         int player = 0;
+        Player[] players = new Player[playersTotal];
+        for (int i = 0; i < humans; i++) {
+            players[i] = new Human("H " + (i+1));
+        }
+        for (int i = humans; i < playersTotal; i++) {
+            players[i] = new GreedyPLayer("G " + (i+1));
+        }
 
         while (true) {
             boolean[] keep = new boolean[6];
             roll(dice, keep);
             for (int i = 0; i < 2; i++) {
-                showBoard(rules, board,used, dice, player);
-                System.out.println("Which do you want to keep?");
-                var nextLine = sc.nextLine();
-                if ("d".equals(nextLine))
+                keep = new boolean[6];
+                if (players[player].show())
+                    showBoard(rules, board,used, dice, player, players);
+                if (players[player].keep(keep, rules, board, used, dice, player))
                     break;
-                for (var die : nextLine.split("")){
-                    if (die.length() > 0 && '1' <= die.charAt(0) && die.charAt(0) <= '6')
-                        keep[Integer.parseUnsignedInt(die)-1] = true;
-                }
                 roll(dice, keep);
             }
-            showBoard(rules, board,used, dice, player);
-            outer:
-            while (true) {
-                System.out.println("Which rule do you want to use?");
-                var nextLine = sc.nextLine();
-                if ("q".equals(nextLine))
-                    break;
-                for (int i = 0; i < rules.length; i++) {
-                    if (rules[i].getName().equalsIgnoreCase(nextLine) && !used[i][player]) {
-                        board[i][player] = rules[i].getScore(dice);
-                        used[i][player] = true;
-                        break outer;
-                    }
-                }
-            }
-            player = (player +1)%players;
+            if (players[player].show())
+                showBoard(rules, board,used, dice, player, players);
+            players[player].rule(rules,board,used,dice,player);
+            player = (player +1)%playersTotal;
         }
     }
     private static void roll(byte[] dice, boolean[] keep){
@@ -61,10 +55,10 @@ public class Game {
                 dice[i] = (byte) rand.nextInt(1, 7);
         }
     }
-    private static void showBoard(Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player){
+    private static void showBoard(Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player, Player[] players){
         System.out.printf("|%s|%s|",Util.rightPad("RULE", 20), Util.rightPad("POSSIBLE POINTS", 20));
         for (int i = 0; i < board[0].length; i++) {
-            System.out.printf("%s|", Util.rightPad(String.valueOf(i+1), 4));
+            System.out.printf("%s|", Util.rightPad(players[i].getName(), 4));
         }
         System.out.println();
         for (int i = 0; i < rules.length; i++) {
