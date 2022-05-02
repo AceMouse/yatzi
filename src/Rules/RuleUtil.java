@@ -1,7 +1,6 @@
 package Rules;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class RuleUtil {
     public static byte[] count(byte[] dice){
