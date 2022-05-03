@@ -51,6 +51,26 @@ public class NN {
             output[i++] = node.activate();
         return output;
     }
+    public NN copy(){
+        for (int i = 0; i < nodes.length; i++) {
+            for (int j = 0; j < nodes[i].length; j++) {
+                nodes[i][j].copyNode();
+            }
+        }
+        for (int i = 0; i < nodes.length; i++) {
+            for (int j = 0; j < nodes[i].length; j++) {
+                nodes[i][j].copyEdges();
+            }
+        }
+        Node[][] newNodes = new Node[nodes.length][];
+        for (int i = 0; i < newNodes.length; i++) {
+            newNodes[i] = new Node[newNodes[i].length];
+            for (int j = 0; j < newNodes[i].length; j++) {
+                newNodes[i][j] = nodes[i][j].getCopy();
+            }
+        }
+        return new NN(newNodes);
+    }
     public void mutate(float biasMutate, float edgeMutate){
         for (int i = 0; i < nodes.length; i++) {
             for (int j = 0; j < nodes[i].length; j++) {
