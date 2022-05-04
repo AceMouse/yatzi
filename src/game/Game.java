@@ -31,8 +31,8 @@ public class Game {
         for (int i = humans; i < playersTotal; i++) {
             players[i] = new GreedyPLayer("G " + (i+1));
         }
-
-        while (true) {
+        int turns = playersTotal* rules.length;
+        while (turns-->0) {
             boolean[] keep = new boolean[6];
             roll(dice, keep);
             for (int i = 0; i < 2; i++) {
