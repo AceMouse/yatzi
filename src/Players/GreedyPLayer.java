@@ -2,6 +2,8 @@ package Players;
 
 import Rules.Rule;
 
+import java.util.Arrays;
+
 public class GreedyPLayer implements Player{
     private String name;
     public GreedyPLayer(String name){
@@ -14,17 +16,17 @@ public class GreedyPLayer implements Player{
     }
 
     @Override
-    public boolean show() {
-        return true;
+    public boolean getShow() {
+        return false;
     }
 
     @Override
-    public boolean keep(boolean[] keep, Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player) {
-        return true;
+    public void promptKeep(boolean[] keep, Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player) {
+        Arrays.fill(keep, true);
     }
 
     @Override
-    public void rule(Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player) {
+    public void promptRule(Rule[] rules, int[][] board, boolean[][] used, byte[] dice, int player) {
         int max = 0;
         int idx = 0;
         for (int i = 0; i < rules.length; i++) {

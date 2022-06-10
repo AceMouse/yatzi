@@ -6,6 +6,10 @@ public class LargeStraight implements Rule{
         return "Stor straight";
     }
     @Override
+    public int maxPossible(){
+        return 20;
+    }
+    @Override
     public int getScore(byte[] dice) {
         return RuleUtil.matches(dice, new byte[]{0,0,1,1,1,1,1})?20:0;
     }

@@ -5,6 +5,11 @@ public class Chance implements Rule{
     public String getName(){
         return "Chancen";
     }
+
+    @Override
+    public int maxPossible(){
+        return 6*6;
+    }
     @Override
     public int getScore(byte[] dice) {
         var counts = RuleUtil.count(dice);

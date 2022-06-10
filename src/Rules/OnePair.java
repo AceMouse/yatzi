@@ -6,6 +6,10 @@ public class OnePair implements Rule{
         return "1 Par";
     }
     @Override
+    public int maxPossible(){
+        return 6*2;
+    }
+    @Override
     public int getScore(byte[] dice) {
         return RuleUtil.getMaxGroupScore(RuleUtil.count(dice), 2, 2);
     }

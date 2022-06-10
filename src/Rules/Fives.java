@@ -6,6 +6,10 @@ public class Fives implements Rule{
         return "Femere";
     }
     @Override
+    public int maxPossible(){
+        return 6*5;
+    }
+    @Override
     public int getScore(byte[] dice) {
         var counts = RuleUtil.count(dice);
         return counts[5]*5;

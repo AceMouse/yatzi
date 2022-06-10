@@ -1,6 +1,8 @@
 package Rules;
 
 public interface Rule {
+
+    public int maxPossible();
     /**
      *
      * @param dice

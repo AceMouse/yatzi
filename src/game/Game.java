@@ -16,14 +16,13 @@ public class Game {
         int playersTotal = sc.nextInt();
         System.out.println("how many human players?");
         int humans = sc.nextInt();
+        System.out.println("how many games to average?");
+        int games = sc.nextInt();
         sc.nextLine();
         Rule[] rules = new Rule[]{new Ones(), new Twos(), new Threes(), new Fours(), new Fives(), new Sixes(),
                 new OnePair(), new TwoPair(), new ThreePair(), new ThreeOfAKind(), new FourOfAKind(), new FiveOfAKind(), new TwoXThreeOfAKind(),
                 new SmallStraight(), new LargeStraight(), new Royal(), new FullHouse(), new Chance(), new Yatzy() };
-        int[][] board = new int[rules.length][playersTotal];
-        boolean[][] used = new boolean[board.length][board[0].length];
-        byte[] dice = new byte[6];
-        int player = 0;
+
         Player[] players = new Player[playersTotal];
         for (int i = 0; i < humans; i++) {
             players[i] = new Human("H " + (i+1));
@@ -31,24 +30,55 @@ public class Game {
         for (int i = humans; i < playersTotal; i++) {
             players[i] = new GreedyPLayer("G " + (i+1));
         }
-        int turns = playersTotal* rules.length;
+        int[] aggregateScore = new int[playersTotal];
+        for (int game = 0; game < games; game++) {
+            int[] score = playGame(rules, players, false);
+            for (int i = 0; i < playersTotal; i++) {
+                aggregateScore[i] += score[i];
+            }
+        }
+        int maxPossibleScore = 0;
+        for (int i = 0; i < rules.length; i++) {
+            maxPossibleScore += rules[i].maxPossible();
+        }
+        System.out.println("Max possible score: " + maxPossibleScore);
+        for (int i = 0; i < playersTotal; i++) {
+            System.out.print(aggregateScore[i]/games + " ");
+        }
+
+    }
+
+    private static int[] playGame(Rule[] rules, Player[] players, boolean showEndState) {
+        int playersTotal = players.length;
+        int[][] board = new int[rules.length][playersTotal];
+        boolean[][] used = new boolean[board.length][board[0].length];
+        byte[] dice = new byte[6];
+        int player = 0;
+        int turns = playersTotal * rules.length;
         while (turns-->0) {
             boolean[] keep = new boolean[6];
             roll(dice, keep);
             for (int i = 0; i < 2; i++) {
                 keep = new boolean[6];
-                if (players[player].show())
+                if (players[player].getShow())
                     showBoard(rules, board,used, dice, player, players);
-                if (players[player].keep(keep, rules, board, used, dice, player))
-                    break;
+                players[player].promptKeep(keep, rules, board, used, dice, player);
                 roll(dice, keep);
             }
-            if (players[player].show())
+            if (players[player].getShow())
                 showBoard(rules, board,used, dice, player, players);
-            players[player].rule(rules,board,used,dice,player);
-            player = (player +1)%playersTotal;
+            players[player].promptRule(rules,board,used,dice,player);
+            player = (player +1)% playersTotal;
         }
+        if (showEndState)
+            showBoard(rules, board,used, dice, player, players);
+        int[] scores = new int[playersTotal];
+        for (int i = 0; i < playersTotal; i++) {
+            scores[i] = players[i].getScore(board,i);
+        }
+        return scores;
     }
+
     private static void roll(byte[] dice, boolean[] keep){
         for (int i = 0; i < keep.length; i++) {
             if (!keep[i])

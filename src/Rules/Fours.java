@@ -6,6 +6,10 @@ public class Fours implements Rule{
         return "Fireere";
     }
     @Override
+    public int maxPossible(){
+        return 6*4;
+    }
+    @Override
     public int getScore(byte[] dice) {
         var counts = RuleUtil.count(dice);
         return counts[4]*4;

@@ -6,6 +6,10 @@ public class Ones implements Rule{
         return "Enere";
     }
     @Override
+    public int maxPossible(){
+        return 6*1;
+    }
+    @Override
     public int getScore(byte[] dice) {
         var count = RuleUtil.count(dice);
         return count[1];

@@ -6,6 +6,10 @@ public class Threes implements Rule{
         return "Treere";
     }
     @Override
+    public int maxPossible(){
+        return 6*3;
+    }
+    @Override
     public int getScore(byte[] dice) {
         var counts = RuleUtil.count(dice);
         return counts[3]*3;
