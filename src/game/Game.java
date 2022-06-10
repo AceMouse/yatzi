@@ -99,12 +99,8 @@ public class Game {
             System.out.println();
         }
         System.out.printf("|%s|%s|",Util.rightPad("Total", 20), Util.rightPad("", 20));
-        for (int i = 0; i < board[0].length; i++) {
-            int total = 0;
-            for (int j = 0; j < board.length; j++) {
-                total += board[j][i];
-            }
-            System.out.printf("%s|", Util.rightPad(String.valueOf(total), 4));
+        for (int i = 0; i < players.length; i++) {
+            System.out.printf("%s|", Util.rightPad(String.valueOf(players[i].getScore(board,i)), 4));
         }
         System.out.println();
         System.out.print("These are your dice:");
