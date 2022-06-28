@@ -27,7 +27,7 @@ public class NN {
                     edgeSet.add(rand.nextInt(nodes[i+1].length));
                 }
                 for (int n : edgeSet){
-                    nodes[i][j].addEdgeTo(nodes[i][n], rand.nextFloat());
+                    nodes[i][j].addEdgeTo(nodes[i+1][n], rand.nextFloat());
                 }
             }
         }
@@ -75,6 +75,22 @@ public class NN {
         for (int i = 0; i < nodes.length; i++) {
             for (int j = 0; j < nodes[i].length; j++) {
                 nodes[i][j].mutate(biasMutate, edgeMutate, rand);
+            }
+        }
+        int maxAddEdges = 1;
+        int maxDelEdges = 1;
+        for (int i = 0; i < nodes.length-1; i++) {
+            for (int j = 0; j < nodes[i].length; j++) {
+                if (rand.nextInt(100) == 0) {
+                    int add = rand.nextInt(1, maxAddEdges + 1);
+                    for (int k = 0; k < add; k++) {
+                        nodes[i][j].addEdgeTo(nodes[i + 1][rand.nextInt(nodes[i + 1].length)], rand.nextFloat());
+                    }
+                    int del = rand.nextInt(1, maxDelEdges + 1);
+                    for (int k = 0; k < del; k++) {
+                        nodes[i][j].removeEdge(rand);
+                    }
+                }
             }
         }
     }

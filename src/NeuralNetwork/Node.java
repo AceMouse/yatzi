@@ -24,9 +24,14 @@ public class Node {
     public void addEdgeTo(Node node, float weight){
         edgeTo.add(new Edge(node, weight));
     }
+    public void removeEdge(Random rand){
+        if (edgeTo.size() > 0)
+            edgeTo.remove(rand.nextInt(edgeTo.size()));
+    }
     public void addEdgeTo(Edge e){
         edgeTo.add(e);
     }
+
     public void mutate(float biasMutate, float edgeMutate, Random rand){
         bias += (rand.nextFloat()-0.5f)*biasMutate;
         for(Edge edge : edgeTo)
